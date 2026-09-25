@@ -1,0 +1,273 @@
+[
+  {
+    "id": "q01",
+    "type": "single",
+    "question": "In a penalty shoot-out, if the kicker accidentally kicks the ball with both feet simultaneously and the ball goes into the goal, what should happen?",
+    "ground_truth": "The kick is retaken.",
+    "source_chunk_ids": [
+      "laws_of_the_game_2026_27_0121"
+    ]
+  },
+  {
+    "id": "q02",
+    "type": "single",
+    "question": "What sanction does a player receive if they refuse to leave the field on a stretcher or on foot after the referee has authorised medical staff to enter?",
+    "ground_truth": "The player must be cautioned for unsporting behaviour.",
+    "source_chunk_ids": [
+      "laws_of_the_game_2026_27_0050"
+    ]
+  },
+  {
+    "id": "q03",
+    "type": "single",
+    "question": "If an extra person from the team that scored interferes with play when a goal is scored, what does the referee do?",
+    "ground_truth": "The referee must disallow the goal and restart play with a direct free kick from the position of the extra person.",
+    "source_chunk_ids": [
+      "laws_of_the_game_2026_27_0039"
+    ]
+  },
+  {
+    "id": "q04",
+    "type": "single",
+    "question": "Under sin-bin (temporary dismissal) System A, what happens to a player who receives a second caution in the same match?",
+    "ground_truth": "The player serves a second temporary dismissal period and then takes no further part in the match; they may be replaced by a substitute at the end of that period if the team still has substitution opportunities.",
+    "source_chunk_ids": [
+      "laws_of_the_game_2026_27_0019"
+    ]
+  },
+  {
+    "id": "q05",
+    "type": "single",
+    "question": "When a goal is scored and there is no doubt about the decision, how far must the assistant referee run and in which direction?",
+    "ground_truth": "The assistant referee must move quickly 25–30 metres along the touchline towards the halfway line without raising the flag.",
+    "source_chunk_ids": [
+      "laws_of_the_game_2026_27_0142"
+    ]
+  },
+  {
+    "id": "q06",
+    "type": "single",
+    "question": "What happens if a goalkeeper holds the ball in their hands for more than eight seconds?",
+    "ground_truth": "The opposing team is awarded a corner kick. The referee visibly counts down the last five seconds with a raised hand.",
+    "source_chunk_ids": [
+      "laws_of_the_game_2026_27_0075"
+    ]
+  },
+  {
+    "id": "q07",
+    "type": "single",
+    "question": "If the stadium is changed for a Champions League match, who bears the costs of staging the match?",
+    "ground_truth": "The home club bears the costs of staging the match.",
+    "source_chunk_ids": [
+      "ucl_regulations_2026_27_0038"
+    ]
+  },
+  {
+    "id": "q08",
+    "type": "single",
+    "question": "How does the Champions League league phase draw work?",
+    "ground_truth": "The 36 clubs are split into four pots of nine based on club coefficients. Each team is drawn against two opponents from each pot, playing one at home and one away.",
+    "source_chunk_ids": [
+      "ucl_regulations_2026_27_0028"
+    ]
+  },
+  {
+    "id": "q09",
+    "type": "single",
+    "question": "What are the allowed start times for pre‑match press conferences?",
+    "ground_truth": "Press conferences must start between 12:00 and 20:00 local time, unless an exception is agreed in advance with UEFA.",
+    "source_chunk_ids": [
+      "ucl_regulations_2026_27_0106"
+    ]
+  },
+  {
+    "id": "q10",
+    "type": "single",
+    "question": "In a Champions League knockout match, how many substitutes are allowed to take part if the game goes to extra time?",
+    "ground_truth": "Up to five substitutes may take part, and a sixth substitute listed on the match sheet may take part exclusively during extra time.",
+    "source_chunk_ids": [
+      "ucl_regulations_2026_27_0076"
+    ]
+  },
+  {
+    "id": "q11",
+    "type": "single",
+    "question": "What is the maximum initial duration a provisional measure can be applied for under the UEFA Disciplinary Regulations?",
+    "ground_truth": "A provisional measure may apply for up to 90 days, and can be exceptionally extended by up to 30 days, except for measures related to the UEFA Anti‑Doping Regulations.",
+    "source_chunk_ids": [
+      "uefa_disciplinary_regulations_0031"
+    ]
+  },
+  {
+    "id": "q12",
+    "type": "single",
+    "question": "What can happen to someone who fails to comply with a UEFA summons to appear as a witness?",
+    "ground_truth": "They may be sanctioned in accordance with the UEFA Disciplinary Regulations.",
+    "source_chunk_ids": [
+      "uefa_disciplinary_regulations_0029"
+    ]
+  },
+  {
+    "id": "q13",
+    "type": "single",
+    "question": "Can a club be punished for its fans' behaviour even if it organised the match properly?",
+    "ground_truth": "Yes. Clubs are liable for certain inappropriate behaviour by their supporters (such as invading the pitch) and may face disciplinary measures even if they prove they were not negligent.",
+    "source_chunk_ids": [
+      "uefa_disciplinary_regulations_0012"
+    ]
+  },
+  {
+    "id": "q14",
+    "type": "single",
+    "question": "Is it an offence just to be in an offside position?",
+    "ground_truth": "No, being in an offside position is not an offence in itself. A player is in an offside position if any part of the head, body or feet is in the opponents' half and nearer to the opponents' goal line than both the ball and the second-last opponent; hands and arms are not considered.",
+    "source_chunk_ids": [
+      "laws_of_the_game_2026_27_0066"
+    ]
+  },
+  {
+    "id": "q15",
+    "type": "single",
+    "question": "What verification must an association complete before requesting an International Transfer Certificate for a player under ten years old?",
+    "ground_truth": "The association must verify, beyond all doubt, that the player's circumstances fall under one of the exceptions listed in paragraph 2, 3, or 4 c, and this verification must be done before any registration.",
+    "source_chunk_ids": [
+      "fifa_rstp_0039"
+    ]
+  },
+  {
+    "id": "q16",
+    "type": "single",
+    "question": "What data must the electronic domestic transfer system collect at a minimum for a national transfer?",
+    "ground_truth": "It must collect the player’s full name, gender, nationality, date of birth and FIFA ID, the player’s status (amateur or professional), the names and FIFA IDs of the two clubs involved, and any payments between the clubs, if applicable.",
+    "source_chunk_ids": [
+      "fifa_rstp_0004"
+    ]
+  },
+  {
+    "id": "q17",
+    "type": "single",
+    "question": "If a player’s international match was held in a different confederation from her club’s, how long does she have to resume duty with her club after the release period ends?",
+    "ground_truth": "She must resume duty within 48 hours after the end of the release period.",
+    "source_chunk_ids": [
+      "fifa_rstp_0059"
+    ]
+  },
+  {
+    "id": "q18",
+    "type": "single",
+    "question": "Can a professional player attend a trial with another club without getting written permission from their current club?",
+    "ground_truth": "No, a professional may only trial with another club if they have the express written permission of their current club.",
+    "source_chunk_ids": [
+      "fifa_rstp_0041"
+    ]
+  },
+  {
+    "id": "q19",
+    "type": "multi_hop",
+    "question": "A player is suspected of having a concussion during a Champions League match. What happens, and can a competition allow extra substitutions for concussion?",
+    "ground_truth": "The referee stops the game so the team doctor can assess the player, which should in principle take no more than three minutes; the player may only continue if the team doctor confirms his fitness to the referee. The Laws of the Game let competitions allow additional permanent concussion substitutions, so a team does not suffer a numerical disadvantage.",
+    "source_chunk_ids": [
+      "ucl_regulations_2026_27_0080",
+      "laws_of_the_game_2026_27_0002"
+    ]
+  },
+  {
+    "id": "q20",
+    "type": "multi_hop",
+    "question": "If the goal-line technology fails the referee's pre-match test in a Champions League knockout match, what must the referee do, and can the match still go ahead?",
+    "ground_truth": "The referee must not use the GLT system and must report this to the appropriate authorities. The match can still take place without GLT, and not using GLT does not affect the validity of the referee's decisions, which are final.",
+    "source_chunk_ids": [
+      "laws_of_the_game_2026_27_0030",
+      "ucl_regulations_2026_27_0081"
+    ]
+  },
+  {
+    "id": "q21",
+    "type": "multi_hop",
+    "question": "A player gets a second yellow card in a Champions League match. What happens on the pitch, and does he miss the next match?",
+    "ground_truth": "Receiving a second caution in the same match is a sending-off offence, so he is shown a red card. A player sent off is automatically suspended for the next match in a UEFA club competition.",
+    "source_chunk_ids": [
+      "laws_of_the_game_2026_27_0080",
+      "ucl_regulations_2026_27_0082"
+    ]
+  },
+  {
+    "id": "q22",
+    "type": "multi_hop",
+    "question": "In a Champions League match, a defender deliberately handles the ball to stop a certain goal. What happens to him on the pitch, and is he banned afterwards?",
+    "ground_truth": "Denying the opposing team a goal or an obvious goal-scoring opportunity with a deliberate handball is a sending-off offence, so he is sent off. A player sent off is automatically suspended for the next match in a UEFA club competition.",
+    "source_chunk_ids": [
+      "laws_of_the_game_2026_27_0080",
+      "ucl_regulations_2026_27_0082"
+    ]
+  },
+  {
+    "id": "q23",
+    "type": "multi_hop",
+    "question": "In a Champions League match, a penalty taker makes an illegal feint. What is the decision, and could this caution make him miss a match?",
+    "ground_truth": "An indirect free kick is awarded to the defending team and the kicker is cautioned. A single yellow card does not cause a suspension, but in the Champions League a player is suspended for the next match after three yellow cards (and after the fifth, seventh, etc.).",
+    "source_chunk_ids": [
+      "laws_of_the_game_2026_27_0094",
+      "ucl_regulations_2026_27_0082"
+    ]
+  },
+  {
+    "id": "q24",
+    "type": "multi_hop",
+    "question": "In a Champions League match, a team official deliberately throws an object onto the pitch and it interferes with play. How is play restarted, and what happens to the official?",
+    "ground_truth": "Play restarts with a direct free kick (or a penalty kick) where the object interfered with play. Deliberately throwing an object onto the field is a sending-off offence for a team official, and a team official sent off is automatically suspended for the next UEFA club competition match.",
+    "source_chunk_ids": [
+      "laws_of_the_game_2026_27_0086",
+      "laws_of_the_game_2026_27_0083",
+      "ucl_regulations_2026_27_0082"
+    ]
+  },
+  {
+    "id": "q25",
+    "type": "multi_hop",
+    "question": "Our club wants to protest against the result of a Champions League match. What is the deadline, how much does it cost, and do we get the money back?",
+    "ground_truth": "The protest and proof of payment of the protest fee must reach UEFA within 24 hours of the end of the match; this limit cannot be extended. The fee is €1,000 and is reimbursed only if the protest is admitted.",
+    "source_chunk_ids": [
+      "ucl_regulations_2026_27_0083",
+      "uefa_disciplinary_regulations_0035"
+    ]
+  },
+  {
+    "id": "q26",
+    "type": "multi_hop",
+    "question": "A player who only played in the Champions League qualifying rounds for his old club transfers abroad. How long does his old association have to deliver the international transfer certificate (ITC), and can he play in the Champions League for his new club this season?",
+    "ground_truth": "The former association must deliver the ITC within 72 hours of the request. Yes: a player fielded only in the qualifying rounds or play-offs may play in the Champions League for another club from the league phase onwards.",
+    "source_chunk_ids": [
+      "fifa_rstp_0083",
+      "ucl_regulations_2026_27_0043"
+    ]
+  },
+  {
+    "id": "q27",
+    "type": "no_answer",
+    "question": "How many teams are relegated from the English Premier League each season?",
+    "ground_truth": "I don't know based on the provided documents.",
+    "source_chunk_ids": []
+  },
+  {
+    "id": "q28",
+    "type": "no_answer",
+    "question": "How long is each quarter in an NBA basketball game?",
+    "ground_truth": "I don't know based on the provided documents.",
+    "source_chunk_ids": []
+  },
+  {
+    "id": "q29",
+    "type": "no_answer",
+    "question": "Which club won the 2025/26 UEFA Champions League?",
+    "ground_truth": "I don't know based on the provided documents.",
+    "source_chunk_ids": []
+  },
+  {
+    "id": "q30",
+    "type": "no_answer",
+    "question": "How much does a ticket for the 2027 Champions League final cost?",
+    "ground_truth": "I don't know based on the provided documents.",
+    "source_chunk_ids": []
+  }
+]

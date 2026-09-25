@@ -1,0 +1,8 @@
+pymupdf
+sentence-transformers
+numpy
+pandas
+groq
+ragas
+langchain-groq
+python-dotenv
