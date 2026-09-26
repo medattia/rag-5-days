@@ -8,6 +8,7 @@ A RAG assistant that answers questions about football rules, upgraded with one m
 | Day | Technique | Answer correct (all) |
 |---|---|---|
 | 1 | Baseline RAG | 0.92 |
+| 2 | Contextual retrieval | 0.94 |
 
 ## Run
 pip install -r requirements.txt
