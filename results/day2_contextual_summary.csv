@@ -1,0 +1,4 @@
+type,retrieval_hit,context_recall,faithfulness,answer_correctness
+multi_hop,0.71,0.83,0.73,0.88
+single,0.83,1.0,0.89,0.97
+ALL answerable,0.79,0.95,0.84,0.94

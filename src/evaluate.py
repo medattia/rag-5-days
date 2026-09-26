@@ -33,14 +33,17 @@ sys.modules["langchain_community.chat_models.vertexai"] = _stub
 from ragas.llms import llm_factory
 from ragas.metrics.collections import ContextRecall, Faithfulness
 
-from rag import BaselineRAG
+from rag import BaselineRAG, ContextualRAG
 
 load_dotenv()
 
 TESTSET = Path("eval/testset.json")
 RESULTS = Path("results")
 JUDGE_MODEL = "gemini-3.5-flash-lite"  # the "grader" LLM: a different family from the RAG's LLM, so it doesn't grade itself
-RAG_VERSIONS = {"day1_baseline": BaselineRAG}   # we add one line here each day
+RAG_VERSIONS = {                                  # we add one line here each day
+    "day1_baseline": BaselineRAG,
+    "day2_contextual": ContextualRAG,
+}
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
 
 CORRECTNESS_PROMPT = """You grade an answer to a football-rules question against an answer key.

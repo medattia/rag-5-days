@@ -3,7 +3,8 @@
 Run from the project root:
     python src/rag.py "How many substitutes can a team use in a Champions League match?"
 
-Note: embeddings are saved to data/embeddings_gemini.npy. If you re-run ingest.py, delete that file.
+Note: embeddings are saved to data/embeddings_gemini.npy (Day 1) and data/embeddings_contextual.npy (Day 2).
+If you re-run ingest.py, delete those files.
 """
 import json
 import os
@@ -37,6 +38,13 @@ Be concise."""
 
 
 class BaselineRAG:
+    """Day 1: embed the raw chunk text."""
+    emb_file = EMB_FILE
+
+    def index_text(self, chunk):
+        """The text that gets embedded for search."""
+        return chunk["text"]
+
     def __init__(self):
         self.chunks = json.loads(CHUNKS_FILE.read_text(encoding="utf-8"))
         self.gemini = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
@@ -61,19 +69,19 @@ class BaselineRAG:
         raise RuntimeError("Gemini embedding failed after several retries.")
 
     def _load_or_build_vectors(self):
-        if EMB_FILE.exists():
-            vectors = np.load(EMB_FILE)
+        if self.emb_file.exists():
+            vectors = np.load(self.emb_file)
             if len(vectors) == len(self.chunks):
                 return vectors
-        print("Embedding chunks with Gemini (first run only)...")
-        texts = [c["text"] for c in self.chunks]
+        print(f"Embedding chunks with Gemini into {self.emb_file} (first run only, ~7 min)...")
+        texts = [self.index_text(c) for c in self.chunks]
         parts = []
         for start in range(0, len(texts), EMBED_BATCH):
             parts.append(self._embed(texts[start:start + EMBED_BATCH], "RETRIEVAL_DOCUMENT"))
             print(f"  {min(start + EMBED_BATCH, len(texts))}/{len(texts)}")
             time.sleep(EMBED_PAUSE)
         vectors = np.vstack(parts)
-        np.save(EMB_FILE, vectors)
+        np.save(self.emb_file, vectors)
         return vectors
 
     def retrieve(self, question, k=TOP_K):
@@ -103,9 +111,28 @@ class BaselineRAG:
         return {"question": question, "answer": self.generate(question, contexts), "contexts": contexts}
 
 
+class ContextualRAG(BaselineRAG):
+    """Day 2: embed "context line + chunk text", so each chunk says where it comes from.
+    Only SEARCH changes; the LLM still receives the same chunk text as Day 1 (one change at a time)."""
+    emb_file = Path("data/embeddings_contextual.npy")
+    contexts_file = Path("data/contexts.json")
+
+    def __init__(self):
+        if not self.contexts_file.exists():
+            raise SystemExit("data/contexts.json not found. Run: python src/contextualize.py")
+        self.contexts = json.loads(self.contexts_file.read_text(encoding="utf-8"))
+        super().__init__()
+        missing = [c["id"] for c in self.chunks if c["id"] not in self.contexts]
+        if missing:
+            raise SystemExit(f"{len(missing)} chunks have no context yet. Run contextualize.py again.")
+
+    def index_text(self, chunk):
+        return f"{self.contexts[chunk['id']]}\n\n{chunk['text']}"
+
+
 if __name__ == "__main__":
     question = " ".join(sys.argv[1:]) or "How many substitutes can a team use in a UEFA Champions League match?"
-    rag = BaselineRAG()
+    rag = ContextualRAG() if Path("data/contexts.json").exists() else BaselineRAG()
     result = rag.ask(question)
 
     print(f"\nQUESTION: {question}\n")
