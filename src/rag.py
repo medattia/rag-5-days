@@ -130,9 +130,62 @@ class ContextualRAG(BaselineRAG):
         return f"{self.contexts[chunk['id']]}\n\n{chunk['text']}"
 
 
+# ---------------- Day 3: hybrid search + reranking ----------------
+RERANK_MODEL = "BAAI/bge-reranker-v2-m3"   # cross-encoder: reads (question, chunk) together
+SHORTLIST = 20                             # merged candidates the reranker reads
+POOL = 50                                  # how far down each list we look before merging
+RRF_K = 60                                 # standard constant in Reciprocal Rank Fusion
+STOPWORDS = set("""a an the of to in on at for by with from and or is are was were be been being it its this that
+these those if then than as can may must shall will would should do does did has have had not no what which who
+whom when where why how there their they them he she his her our we you your i""".split())
+
+
+def tokenize(text):
+    """Lowercase words for keyword search, without very common words."""
+    return [w for w in re.findall(r"\w+", text.lower()) if w not in STOPWORDS]
+
+
+class HybridRerankRAG(ContextualRAG):
+    """Day 3: vector search + BM25 keyword search, merged with RRF, then a reranker picks the final 5.
+    Both searches and the reranker see "context line + chunk" (built on Day 2).
+    The LLM still receives the same chunk text as Days 1-2."""
+
+    def __init__(self):
+        from rank_bm25 import BM25Okapi
+        from sentence_transformers import CrossEncoder
+        super().__init__()
+        self.index_texts = [self.index_text(c) for c in self.chunks]
+        self.bm25 = BM25Okapi([tokenize(t) for t in self.index_texts])
+        print(f"Loading reranker {RERANK_MODEL} (first run downloads it)...")
+        self.reranker = CrossEncoder(RERANK_MODEL, max_length=512)
+        import torch
+        if torch.cuda.is_available():
+            self.reranker.model.half()   # half precision: ~1.1 GB instead of ~2.3 GB, fits a 4 GB GPU
+            print(f"Reranker running on GPU: {torch.cuda.get_device_name(0)}")
+        else:
+            print("Reranker running on CPU (slower, but works).")
+
+    def retrieve(self, question, k=TOP_K):
+        # 1) vector search (meaning)
+        q = self._embed([question], "RETRIEVAL_QUERY")[0]
+        vector_rank = np.argsort(self.vectors @ q)[::-1][:POOL]
+        # 2) BM25 (exact words)
+        bm25_rank = np.argsort(self.bm25.get_scores(tokenize(question)))[::-1][:POOL]
+        # 3) merge the two lists with RRF: a chunk ranked high in either list ends up high
+        fused = {}
+        for ranking in (vector_rank, bm25_rank):
+            for rank, i in enumerate(ranking):
+                fused[int(i)] = fused.get(int(i), 0.0) + 1.0 / (RRF_K + rank + 1)
+        shortlist = sorted(fused, key=fused.get, reverse=True)[:SHORTLIST]
+        # 4) rerank the shortlist and keep the best k
+        scores = self.reranker.predict([(question, self.index_texts[i]) for i in shortlist])
+        best = sorted(zip(shortlist, scores), key=lambda x: x[1], reverse=True)[:k]
+        return [{**self.chunks[i], "score": float(s)} for i, s in best]
+
+
 if __name__ == "__main__":
     question = " ".join(sys.argv[1:]) or "How many substitutes can a team use in a UEFA Champions League match?"
-    rag = ContextualRAG() if Path("data/contexts.json").exists() else BaselineRAG()
+    rag = HybridRerankRAG()
     result = rag.ask(question)
 
     print(f"\nQUESTION: {question}\n")

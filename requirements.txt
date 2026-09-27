@@ -6,3 +6,4 @@ groq
 ragas
 langchain-groq
 python-dotenv
+rank-bm25

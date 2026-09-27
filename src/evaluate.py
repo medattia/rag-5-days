@@ -33,7 +33,7 @@ sys.modules["langchain_community.chat_models.vertexai"] = _stub
 from ragas.llms import llm_factory
 from ragas.metrics.collections import ContextRecall, Faithfulness
 
-from rag import BaselineRAG, ContextualRAG
+from rag import BaselineRAG, ContextualRAG, HybridRerankRAG
 
 load_dotenv()
 
@@ -43,6 +43,7 @@ JUDGE_MODEL = "gemini-3.5-flash-lite"  # the "grader" LLM: a different family fr
 RAG_VERSIONS = {                                  # we add one line here each day
     "day1_baseline": BaselineRAG,
     "day2_contextual": ContextualRAG,
+    "day3_hybrid": HybridRerankRAG,
 }
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
 
