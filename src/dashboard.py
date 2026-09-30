@@ -128,7 +128,8 @@ def build():
                          "key": q["ground_truth"], "answer": a.get("answer", ""),
                          "reason": s.get("correctness_reason", ""),
                          "scores": {m[0]: s.get(m[0]) for m in METRICS},
-                         "refusal": s.get("correct_refusal")})
+                         "refusal": s.get("correct_refusal"),
+                         "trace": a.get("trace", [])})
         explorer[d["key"]] = rows
     options = "".join(f'<option value="{d["key"]}"{" selected" if d is latest else ""}>'
                       f'{d["label"]}: {html.escape(d["technique"])}</option>' for d in done)
@@ -291,6 +292,9 @@ function render(){
       <span class="chips">${chips}</span></summary>
       <div class="detail"><div><h4>Answer key</h4><p>${esc(r.key)}</p></div>
       <div><h4>Assistant's answer</h4><p>${esc(r.answer) || "No answer saved."}</p></div>
+      ${r.trace && r.trace.length ? `<div><h4>Checker (Corrective RAG)</h4>${r.trace.map(t =>
+        `<p>Round ${t.round}: ${t.note ? esc(t.note) : t.complete ? "chunks judged complete" :
+          `missing <em>${esc(t.missing)}</em> → searched <em>"${esc(t.follow_up_query)}"</em>`}</p>`).join("")}</div>` : ""}
       ${r.reason ? `<div><h4>Grader's reason</h4><p>${esc(r.reason)}</p></div>` : ""}</div></details>`;
   }).join("") : "<p>No questions match this filter.</p>";
 }

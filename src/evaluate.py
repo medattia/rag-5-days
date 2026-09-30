@@ -33,7 +33,7 @@ sys.modules["langchain_community.chat_models.vertexai"] = _stub
 from ragas.llms import llm_factory
 from ragas.metrics.collections import ContextRecall, Faithfulness
 
-from rag import BaselineRAG, ContextualRAG, HybridRerankRAG
+from rag import BaselineRAG, ContextualRAG, CorrectiveRAG, HybridRerankRAG
 
 load_dotenv()
 
@@ -44,6 +44,7 @@ RAG_VERSIONS = {                                  # we add one line here each da
     "day1_baseline": BaselineRAG,
     "day2_contextual": ContextualRAG,
     "day3_hybrid": HybridRerankRAG,
+    "day4_corrective": CorrectiveRAG,
 }
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
 
@@ -109,6 +110,7 @@ def answer_all(run, testset):
             "answer": result["answer"],
             "contexts": [c["text"] for c in result["contexts"]],
             "context_ids": [c["id"] for c in result["contexts"]],
+            "trace": result.get("trace", []),     # Day 4+: what the checker did
         }
         save(path, answers)
         print(f"answered {q['id']}")

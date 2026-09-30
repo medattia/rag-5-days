@@ -183,9 +183,95 @@ class HybridRerankRAG(ContextualRAG):
         return [{**self.chunks[i], "score": float(s)} for i, s in best]
 
 
+# ---------------- Day 4: Corrective RAG ----------------
+CHECK_MODEL = "openai/gpt-oss-20b"   # the checker (Groq, its own free quota, separate from the answering model)
+MAX_FOLLOWUPS = 2                   # at most 2 extra searches per question
+MIN_NEW_SLOTS = 2                   # when searching again, keep at least 2 of the 5 places for new chunks
+CHECK_PAUSE = 25                    # seconds after each check: free tier allows 8,000 tokens/minute
+
+CHECK_PROMPT = """You check whether retrieved passages are enough to answer a football-rules question.
+
+Question: {question}
+
+Passages:
+{passages}
+
+Tasks:
+1. List the numbers of the passages that are relevant to the question.
+2. Decide if the relevant passages contain ALL the facts needed to answer EVERY part of the question.
+   Multi-part questions (e.g. "what happens on the pitch AND what ban follows") need facts for each part.
+3. If something is missing, describe it in a few words and write ONE short search query for the missing part only.
+   Mention the rulebook if you can guess it (Laws of the Game, UEFA Champions League Regulations,
+   UEFA Disciplinary Regulations, FIFA Regulations on the Status and Transfer of Players).
+
+Return JSON only:
+{"relevant": [1, 2], "complete": true, "missing": "", "follow_up_query": ""}"""
+
+
+class CorrectiveRAG(HybridRerankRAG):
+    """Day 4: after the Day 3 search, a checker (gpt-oss-20b) reviews the 5 chunks.
+    If facts are missing, it writes a follow-up query; irrelevant chunks are dropped and the free places
+    are filled with the follow-up's best results. Up to 2 follow-ups. The LLM still gets 5 chunks."""
+
+    def check(self, question, chunks):
+        passages = "\n\n".join(f"[{i}] ({c['source']})\n{c['text']}" for i, c in enumerate(chunks, start=1))
+        prompt = CHECK_PROMPT.replace("{question}", question).replace("{passages}", passages)
+        for attempt in range(5):
+            try:
+                reply = self.llm.chat.completions.create(
+                    model=CHECK_MODEL, temperature=0, messages=[{"role": "user", "content": prompt}])
+                time.sleep(CHECK_PAUSE)
+                return json.loads(re.search(r"\{.*\}", reply.choices[0].message.content, re.DOTALL).group(0))
+            except (json.JSONDecodeError, AttributeError):
+                return None   # unreadable answer: keep the chunks as they are
+            except Exception as err:
+                wait = 30 * (attempt + 1)
+                print(f"  checker error ({str(err)[:100]}); retrying in {wait}s...")
+                time.sleep(wait)
+        return None
+
+    def retrieve(self, question, k=TOP_K):
+        chunks = super().retrieve(question, k)
+        trace = []
+        for round_no in range(1, MAX_FOLLOWUPS + 1):
+            verdict = self.check(question, chunks)
+            if not verdict:
+                trace.append({"round": round_no, "note": "check failed, chunks kept"})
+                break
+            query = (verdict.get("follow_up_query") or "").strip()
+            step = {"round": round_no, "complete": bool(verdict.get("complete")),
+                    "missing": verdict.get("missing", ""), "follow_up_query": query}
+            trace.append(step)
+            if verdict.get("complete") or not query:
+                break
+
+            # drop irrelevant chunks, keep at most k - MIN_NEW_SLOTS relevant ones (best-ranked first)
+            numbers = [n for n in verdict.get("relevant", []) if isinstance(n, int) and 1 <= n <= len(chunks)]
+            keep = [chunks[n - 1] for n in sorted(set(numbers))][:k - MIN_NEW_SLOTS]
+            current_ids = {c["id"] for c in chunks}
+            new = [c for c in super().retrieve(query, k) if c["id"] not in current_ids]
+            added = new[:k - len(keep)]
+            updated = keep + added
+            for c in chunks:                      # if the follow-up found too little, top up to k
+                if len(updated) >= k:
+                    break
+                if c["id"] not in {u["id"] for u in updated}:
+                    updated.append(c)
+            step["added"] = [c["id"] for c in added]
+            step["dropped"] = [c["id"] for c in chunks if c["id"] not in {u["id"] for u in updated}]
+            chunks = updated
+        self.last_trace = trace
+        return chunks
+
+    def ask(self, question):
+        result = super().ask(question)
+        result["trace"] = self.last_trace
+        return result
+
+
 if __name__ == "__main__":
     question = " ".join(sys.argv[1:]) or "How many substitutes can a team use in a UEFA Champions League match?"
-    rag = HybridRerankRAG()
+    rag = CorrectiveRAG()
     result = rag.ask(question)
 
     print(f"\nQUESTION: {question}\n")
@@ -193,3 +279,5 @@ if __name__ == "__main__":
     print("RETRIEVED CHUNKS:")
     for i, c in enumerate(result["contexts"], start=1):
         print(f"[{i}] {c['score']:.3f} | {c['source']} | p.{c['page_start']}-{c['page_end']}")
+    for step in result.get("trace", []):
+        print("CHECK:", step)
