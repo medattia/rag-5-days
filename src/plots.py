@@ -28,6 +28,9 @@ DAYS = [   # same plan as dashboard.py
     ("day4_corrective", "Day 4", "Corrective\nRAG"),
     ("day5_agentic", "Day 5", "Agentic\nRAG"),
 ]
+
+if (RESULTS / "day5_agentic_v2_scores.json").exists():   # show the second Day 5 run when it exists
+    DAYS[-1] = ("day5_agentic_v2",) + DAYS[-1][1:]
 METRICS = [
     ("answer_correctness", "Answer correctness"),
     ("context_recall", "Context recall"),

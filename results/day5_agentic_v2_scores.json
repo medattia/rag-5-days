@@ -1,0 +1,256 @@
+{
+  "q01": {
+    "id": "q01",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 0.6666666666666666,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer correctly states that the kick must be retaken if the kicker hits the ball with both feet."
+  },
+  "q02": {
+    "id": "q02",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer correctly identifies that the player must be cautioned for unsporting behaviour if they refuse to leave."
+  },
+  "q03": {
+    "id": "q03",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer includes all key facts from the answer key regarding disallowing the goal and restarting with a direct free kick."
+  },
+  "q04": {
+    "id": "q04",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer contains all key facts from the answer key and contradicts none of them."
+  },
+  "q05": {
+    "id": "q05",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer includes all key facts from the answer key and adds a compatible detail."
+  },
+  "q06": {
+    "id": "q06",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 0.5,
+    "correctness_reason": "It mentions the corner kick but misses the referee visibly counting down the last five seconds."
+  },
+  "q07": {
+    "id": "q07",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer correctly identifies that the home club bears the costs when the stadium is changed."
+  },
+  "q08": {
+    "id": "q08",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 0.8181818181818182,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer includes all key facts from the answer key and adds valid additional details."
+  },
+  "q09": {
+    "id": "q09",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer accurately captures both the time window and the exception condition without any contradictions."
+  },
+  "q10": {
+    "id": "q10",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer accurately reflects the rule allowing up to five substitutes plus an additional sixth substitute exclusively during extra time."
+  },
+  "q11": {
+    "id": "q11",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 0.5,
+    "correctness_reason": "The answer provides the correct initial duration of 90 days but omits the details about extensions and anti-doping exceptions."
+  },
+  "q12": {
+    "id": "q12",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer correctly identifies that they may be sanctioned under the disciplinary regulations and provides accurate additional examples of penalties."
+  },
+  "q13": {
+    "id": "q13",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer accurately states that clubs are liable for fan behavior and can be sanctioned regardless of negligence."
+  },
+  "q14": {
+    "id": "q14",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer correctly states that being in an offside position is not an offence in itself."
+  },
+  "q15": {
+    "id": "q15",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 0.5,
+    "answer_correctness": 0.0,
+    "correctness_reason": "The answer contradicts the key by stating an ITC is not required for a player under ten."
+  },
+  "q16": {
+    "id": "q16",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer contains all the required minimum data points specified in the answer key without any contradictions."
+  },
+  "q17": {
+    "id": "q17",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer accurately states the 48-hour requirement for resuming club duty when the match is in a different confederation."
+  },
+  "q18": {
+    "id": "q18",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer matches the key facts of the answer key without any contradictions."
+  },
+  "q19": {
+    "id": "q19",
+    "type": "multi_hop",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer accurately covers the concussion assessment procedure and confirms that competitions are allowed to use extra permanent concussion substitutions."
+  },
+  "q20": {
+    "id": "q20",
+    "type": "multi_hop",
+    "retrieval_hit": 0.5,
+    "context_recall": 0.5,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer includes all key points from the answer key, including that GLT must not be used, the match can still proceed, and the referee's decisions remain final."
+  },
+  "q21": {
+    "id": "q21",
+    "type": "multi_hop",
+    "retrieval_hit": 0.5,
+    "context_recall": 0.5,
+    "faithfulness": 0.5,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer accurately covers both the red card on the field and the automatic one-match suspension."
+  },
+  "q22": {
+    "id": "q22",
+    "type": "multi_hop",
+    "retrieval_hit": 0.5,
+    "context_recall": 0.5,
+    "faithfulness": 0.8571428571428571,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer correctly identifies that a red card is given for denying a goal and results in an automatic one-match ban."
+  },
+  "q23": {
+    "id": "q23",
+    "type": "multi_hop",
+    "retrieval_hit": 0.5,
+    "context_recall": 1.0,
+    "faithfulness": 0.8571428571428571,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer accurately states the restart (indirect free kick), the sanction (caution), and the correct UEFA Champions League yellow card accumulation rules."
+  },
+  "q24": {
+    "id": "q24",
+    "type": "multi_hop",
+    "retrieval_hit": 0.3333333333333333,
+    "context_recall": 0.5,
+    "faithfulness": 1.0,
+    "answer_correctness": 0.0,
+    "correctness_reason": "The answer incorrectly states the official should be cautioned instead of sent off for deliberately throwing an object onto the pitch."
+  },
+  "q25": {
+    "id": "q25",
+    "type": "multi_hop",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer includes all the required key facts regarding the deadline, fee amount, and refund conditions."
+  },
+  "q26": {
+    "id": "q26",
+    "type": "multi_hop",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 0.6666666666666666,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer correctly states the 72-hour ITC delivery timeframe and confirms eligibility for the Champions League from the league phase."
+  },
+  "q27": {
+    "id": "q27",
+    "type": "no_answer",
+    "correct_refusal": 1.0
+  },
+  "q28": {
+    "id": "q28",
+    "type": "no_answer",
+    "correct_refusal": 1.0
+  },
+  "q29": {
+    "id": "q29",
+    "type": "no_answer",
+    "correct_refusal": 1.0
+  },
+  "q30": {
+    "id": "q30",
+    "type": "no_answer",
+    "correct_refusal": 1.0
+  }
+}

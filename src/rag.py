@@ -269,9 +269,266 @@ class CorrectiveRAG(HybridRerankRAG):
         return result
 
 
+# ---------------- Day 5: Agentic RAG ----------------
+AGENT_MODEL = "gemini-3.1-flash-lite"   # main agent (Gemini, 250K tokens/min) - use the exact name from AI Studio
+FALLBACK_MODEL = "openai/gpt-oss-20b"   # used only if Gemini fails or hits a limit (Groq)
+MAX_SEARCHES = 4                        # step limit: at most 4 searches per question
+SEARCH_K = 5                            # results returned by one search
+GEMINI_PAUSE = 4.5                      # seconds after each Gemini call (15 requests/minute)
+GROQ_PAUSE = 20                         # seconds after each fallback call (8,000 tokens/minute)
+FALLBACK_WORDS = 100                    # the fallback sees shorter passages, to fit Groq's token limit
+
+AGENT_PROMPT = """You are a research agent for football rulebooks (IFAB Laws of the Game,
+UEFA Champions League Regulations, UEFA Disciplinary Regulations, FIFA Regulations on the Status and Transfer of Players).
+
+You have one tool: search(query) -> the 5 most relevant passages from the rulebooks.
+Your job is NOT to answer. Your job is to collect passages that together cover EVERY part of the question,
+then select the best ones for the writer who will answer.
+
+How to work:
+- If the question has several parts (e.g. "what happens on the pitch AND what ban follows"),
+  search for each part separately.
+- Write short, specific queries. Mention the rulebook when you can guess it.
+- If a search did not find what you need, try a different query.
+- You can search at most {max_searches} times. Stop as soon as every part is covered.
+- If the rulebooks cannot answer the question, finish with the closest passages.
+
+Reply with JSON only, one of:
+{"thought": "<short reasoning>", "action": "search", "query": "<search query>"}
+{"thought": "<short reasoning>", "action": "finish", "selected": ["<passage id>", ...]}   (at most {k} ids)
+
+Question: {question}
+
+{history}
+{instruction}"""
+
+
+class AgenticRAG(HybridRerankRAG):
+    """Day 5: an agent (Gemini 3.1 Flash Lite, fallback gpt-oss-20b) decides what to search, how many times
+    (max 4), and which 5 passages to keep. Each search uses the Day 3 search (hybrid + reranking).
+    The answer is still written by gpt-oss-120b from 5 plain chunks, as on Days 1-4."""
+
+    def __init__(self):
+        from openai import OpenAI
+        from tracing import start_tracing
+        super().__init__()
+        self.gemini_chat = OpenAI(api_key=os.environ["GEMINI_API_KEY"],
+                                  base_url="https://generativelanguage.googleapis.com/v1beta/openai/")
+        start_tracing()
+
+    def _history(self, searches, seen, max_words=None):
+        if not searches:
+            return "Searches so far: none."
+        lines, shown = [f"Searches so far ({len(searches)} of {MAX_SEARCHES}):"], set()
+        for n, (query, ids) in enumerate(searches, start=1):
+            lines.append(f'\nSearch {n}: "{query}"')
+            for cid in ids:
+                if cid in shown:
+                    lines.append(f"[{cid}] (already shown above)")
+                    continue
+                shown.add(cid)
+                text = self.index_text(seen[cid])
+                if max_words:
+                    text = " ".join(text.split()[:max_words]) + " ..."
+                lines.append(f"[{cid}] ({seen[cid]['source']}, p.{seen[cid]['page_start']}) {text}")
+        return "\n".join(lines)
+
+    def _prompt(self, question, searches, seen, force, max_words=None):
+        instruction = ("You have used all your searches. You MUST finish now and select the passages."
+                       if force else "Decide your next action.")
+        return (AGENT_PROMPT.replace("{max_searches}", str(MAX_SEARCHES)).replace("{k}", str(TOP_K))
+                .replace("{question}", question).replace("{history}", self._history(searches, seen, max_words))
+                .replace("{instruction}", instruction))
+
+    @staticmethod
+    def _parse(text):
+        try:
+            return json.loads(re.search(r"\{.*\}", text, re.DOTALL).group(0))
+        except (AttributeError, json.JSONDecodeError, TypeError):
+            return None
+
+    def agent_step(self, question, searches, seen, force):
+        """Ask Gemini for the next action; if it fails or hits a limit, ask the fallback instead."""
+        try:
+            reply = self.gemini_chat.chat.completions.create(
+                model=AGENT_MODEL, temperature=0,
+                messages=[{"role": "user", "content": self._prompt(question, searches, seen, force)}])
+            time.sleep(GEMINI_PAUSE)
+            decision = self._parse(reply.choices[0].message.content)
+            if decision:
+                return decision, "gemini"
+        except Exception as err:
+            print(f"  agent: Gemini failed ({str(err)[:80]}), switching to fallback")
+        prompt = self._prompt(question, searches, seen, force, max_words=FALLBACK_WORDS)
+        for attempt in range(3):
+            try:
+                reply = self.llm.chat.completions.create(
+                    model=FALLBACK_MODEL, temperature=0, messages=[{"role": "user", "content": prompt}])
+                time.sleep(GROQ_PAUSE)
+                return self._parse(reply.choices[0].message.content), "fallback"
+            except Exception as err:
+                wait = 30 * (attempt + 1)
+                print(f"  agent: fallback error ({str(err)[:80]}); retrying in {wait}s...")
+                time.sleep(wait)
+        return None, "none"
+
+    def retrieve(self, question, k=TOP_K):
+        from tracing import set_output, span
+        seen, searches, trace, selected = {}, [], [], []
+        with span("agent", "AGENT", question) as agent_span:
+            for step in range(1, MAX_SEARCHES + 2):
+                force = len(searches) >= MAX_SEARCHES
+                decision, model = self.agent_step(question, searches, seen, force)
+                if not decision:
+                    trace.append({"round": step, "note": "agent gave no usable answer", "model": model})
+                    break
+                if decision.get("action") == "search" and not force and (decision.get("query") or "").strip():
+                    query = decision["query"].strip()
+                    with span("search_rulebooks", "TOOL", query) as s:
+                        results = HybridRerankRAG.retrieve(self, query, SEARCH_K)
+                        set_output(s, [c["id"] for c in results])
+                    for c in results:
+                        seen.setdefault(c["id"], c)
+                    searches.append((query, [c["id"] for c in results]))
+                    trace.append({"round": step, "action": "search", "query": query,
+                                  "thought": decision.get("thought", ""), "model": model})
+                    continue
+                selected = [cid for cid in decision.get("selected", []) if cid in seen]
+                selected = list(dict.fromkeys(selected))[:k]
+                trace.append({"round": step, "action": "finish", "selected": list(selected),
+                              "thought": decision.get("thought", ""), "model": model})
+                break
+
+            if not searches:   # the agent never searched: fall back to one Day 3 search
+                results = HybridRerankRAG.retrieve(self, question, SEARCH_K)
+                for c in results:
+                    seen.setdefault(c["id"], c)
+                searches.append((question, [c["id"] for c in results]))
+            # always give the writer k chunks: top up with the best results of each search, in turn
+            for rank in range(SEARCH_K):
+                for _, ids in searches:
+                    if len(selected) < k and rank < len(ids) and ids[rank] not in selected:
+                        selected.append(ids[rank])
+            set_output(agent_span, selected)
+        self.last_trace = trace
+        return [seen[cid] for cid in selected[:k]]
+
+    def ask(self, question):
+        from tracing import set_output, span
+        with span("rag_question", "CHAIN", question) as s:
+            result = super().ask(question)
+            set_output(s, result["answer"])
+        result["trace"] = self.last_trace
+        return result
+
+
+AGENT_PROMPT_V2 = """You are a research agent for football rulebooks (IFAB Laws of the Game,
+UEFA Champions League Regulations, UEFA Disciplinary Regulations, FIFA Regulations on the Status and Transfer of Players).
+
+You have one tool: search(query) -> the 5 most relevant passages from the rulebooks.
+Your job is NOT to answer. Your job is to collect passages that together cover EVERY part of the question,
+then select the best ones for the writer who will answer.
+
+Rules:
+1. Split the question into its parts (sub-questions). A simple question has 1 part.
+   Example: "What happens on the pitch, and is he banned?" has 2 parts.
+2. Search 1 below was already run with the full question.
+3. If the question has 2 or more parts, EACH part needs its OWN search with a short query for that part only.
+   Never combine two parts in one query.
+4. Mention the rulebook in the query when you can guess it.
+5. At most {max_searches} searches in total (search 1 included). Finish when every part is covered.
+
+Reply with JSON only, one of:
+{"thought": "<short>", "parts": ["<part 1>", ...], "action": "search", "part": <part number>, "query": "<query>"}
+{"thought": "<short>", "parts": ["<part 1>", ...], "action": "finish", "selected": ["<passage id>", ...]}
+Select at most {k} passages, covering every part.
+
+Question: {question}
+{parts}
+{history}
+{instruction}"""
+
+
+class AgenticRAGv2(AgenticRAG):
+    """Day 5, second version. Two general fixes after the first run:
+    1) Search the original question first (Day 3 search), so the agent can never start from a worse query.
+    2) Plan first: the agent lists the parts of the question; each part of a multi-part question gets its own
+       search. If the agent tries to finish early, the uncovered parts are searched automatically."""
+
+    def _prompt(self, question, searches, seen, force, max_words=None, instruction=None):
+        parts = ("Parts you listed: " + " | ".join(f"{i}. {p}" for i, p in enumerate(self._parts, start=1))
+                 if self._parts else "")
+        if instruction is None:
+            instruction = ("You have used all your searches. You MUST finish now and select the passages."
+                           if force else "Decide your next action.")
+        return (AGENT_PROMPT_V2.replace("{max_searches}", str(MAX_SEARCHES)).replace("{k}", str(TOP_K))
+                .replace("{question}", question).replace("{parts}", parts)
+                .replace("{history}", self._history(searches, seen, max_words)).replace("{instruction}", instruction))
+
+    def _search(self, query, seen, searches):
+        from tracing import set_output, span
+        with span("search_rulebooks", "TOOL", query) as s:
+            results = HybridRerankRAG.retrieve(self, query, SEARCH_K)
+            set_output(s, [c["id"] for c in results])
+        for c in results:
+            seen.setdefault(c["id"], c)
+        searches.append((query, [c["id"] for c in results]))
+
+    def retrieve(self, question, k=TOP_K):
+        from tracing import set_output, span
+        self._parts = None
+        seen, searches, trace, selected, covered = {}, [], [], [], set()
+        auto_done = False
+        with span("agent", "AGENT", question) as agent_span:
+            self._search(question, seen, searches)                      # fix 1: original question first
+            trace.append({"round": 0, "action": "search", "query": question, "model": "auto (original question)"})
+            for step in range(1, MAX_SEARCHES + 3):
+                force = len(searches) >= MAX_SEARCHES
+                decision, model = self.agent_step(question, searches, seen, force)
+                if not decision:
+                    trace.append({"round": step, "note": "agent gave no usable answer", "model": model})
+                    break
+                if self._parts is None:
+                    self._parts = [str(p).strip() for p in decision.get("parts", []) if str(p).strip()] or [question]
+                    trace.append({"round": step, "note": f"plan: {len(self._parts)} part(s): "
+                                  + " | ".join(self._parts), "model": model})
+                query = (decision.get("query") or "").strip()
+                if decision.get("action") == "search" and not force and query:
+                    self._search(query, seen, searches)
+                    if isinstance(decision.get("part"), int):
+                        covered.add(decision["part"])
+                    trace.append({"round": step, "action": "search", "query": query,
+                                  "thought": decision.get("thought", ""), "model": model})
+                    continue
+                # fix 2: before finishing, every part of a multi-part question needs its own search
+                n_parts = len(self._parts)
+                uncovered = [] if n_parts == 1 else [i for i in range(1, n_parts + 1) if i not in covered]
+                if uncovered and not auto_done and len(searches) < MAX_SEARCHES:
+                    for i in uncovered:
+                        if len(searches) >= MAX_SEARCHES:
+                            break
+                        self._search(self._parts[i - 1], seen, searches)
+                        covered.add(i)
+                        trace.append({"round": step, "action": "search", "query": self._parts[i - 1],
+                                      "model": "auto (uncovered part)"})
+                    auto_done = True
+                    continue
+                selected = list(dict.fromkeys(cid for cid in decision.get("selected", []) if cid in seen))[:k]
+                trace.append({"round": step, "action": "finish", "selected": list(selected),
+                              "thought": decision.get("thought", ""), "model": model})
+                break
+            for rank in range(SEARCH_K):                                 # always give the writer k chunks
+                for _, ids in searches:
+                    if len(selected) < k and rank < len(ids) and ids[rank] not in selected:
+                        selected.append(ids[rank])
+            set_output(agent_span, selected)
+        self.last_trace = trace
+        return [seen[cid] for cid in selected[:k]]
+
+
 if __name__ == "__main__":
     question = " ".join(sys.argv[1:]) or "How many substitutes can a team use in a UEFA Champions League match?"
-    rag = CorrectiveRAG()
+    rag = AgenticRAGv2()
     result = rag.ask(question)
 
     print(f"\nQUESTION: {question}\n")

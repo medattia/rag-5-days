@@ -1,0 +1,256 @@
+{
+  "q01": {
+    "id": "q01",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer correctly states that the kick must be retaken."
+  },
+  "q02": {
+    "id": "q02",
+    "type": "single",
+    "retrieval_hit": 0.0,
+    "context_recall": 0.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 0.0,
+    "correctness_reason": "The answer states it doesn't know, missing the required key fact."
+  },
+  "q03": {
+    "id": "q03",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 0.5,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer includes all key facts from the answer key and contradicts nothing."
+  },
+  "q04": {
+    "id": "q04",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer accurately captures all key facts regarding the second temporary dismissal and subsequent substitution rules under System A."
+  },
+  "q05": {
+    "id": "q05",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer includes all the required details matching the answer key."
+  },
+  "q06": {
+    "id": "q06",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer correctly identifies that a corner kick is awarded to the opposing team for holding the ball over eight seconds."
+  },
+  "q07": {
+    "id": "q07",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer accurately states that the home club bears the costs of staging the match when the stadium is changed."
+  },
+  "q08": {
+    "id": "q08",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 0.8888888888888888,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer includes all key facts from the answer key and correctly explains the pot and opponent structure."
+  },
+  "q09": {
+    "id": "q09",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer accurately reflects the required time window and the exception rule without contradictions."
+  },
+  "q10": {
+    "id": "q10",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer accurately captures the rule allowing five regular substitutes plus a sixth exclusive to extra time."
+  },
+  "q11": {
+    "id": "q11",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer correctly identifies the maximum initial duration of 90 days as stated in the answer key."
+  },
+  "q12": {
+    "id": "q12",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer includes the core fact that the person may be sanctioned under regulations, and adds extra consistent detail."
+  },
+  "q13": {
+    "id": "q13",
+    "type": "single",
+    "retrieval_hit": 0.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer accurately captures strict liability for fan behaviour regardless of club negligence."
+  },
+  "q14": {
+    "id": "q14",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer correctly states that being in an offside position is not an offence in itself."
+  },
+  "q15": {
+    "id": "q15",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 0.0,
+    "correctness_reason": "The answer contradicts the premise of the question by stating an ITC is not required for players under ten years old."
+  },
+  "q16": {
+    "id": "q16",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer includes all the mandatory data points required by the answer key."
+  },
+  "q17": {
+    "id": "q17",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer accurately states the 48-hour requirement for resuming club duty after an international match in a different confederation."
+  },
+  "q18": {
+    "id": "q18",
+    "type": "single",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer matches the key facts of the answer key perfectly."
+  },
+  "q19": {
+    "id": "q19",
+    "type": "multi_hop",
+    "retrieval_hit": 0.5,
+    "context_recall": 0.5,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer covers all key facts from the answer key regarding the concussion assessment protocol and the allowance of additional permanent concussion substitutions by competitions."
+  },
+  "q20": {
+    "id": "q20",
+    "type": "multi_hop",
+    "retrieval_hit": 0.5,
+    "context_recall": 0.5,
+    "faithfulness": 0.6666666666666666,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer includes all key facts regarding the failure of goal-line technology and its effect on the match."
+  },
+  "q21": {
+    "id": "q21",
+    "type": "multi_hop",
+    "retrieval_hit": 0.5,
+    "context_recall": 0.5,
+    "faithfulness": 0.16666666666666666,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer accurately states that the player is sent off with a red card and is suspended for the next match."
+  },
+  "q22": {
+    "id": "q22",
+    "type": "multi_hop",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 0.5,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer correctly identifies the red card for denying a goal by deliberate handball and the automatic one-match suspension in UEFA competitions."
+  },
+  "q23": {
+    "id": "q23",
+    "type": "multi_hop",
+    "retrieval_hit": 0.5,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer accurately covers the indirect free kick, the caution for the kicker, and the Champions League yellow card accumulation rules."
+  },
+  "q24": {
+    "id": "q24",
+    "type": "multi_hop",
+    "retrieval_hit": 0.6666666666666666,
+    "context_recall": 0.6666666666666666,
+    "faithfulness": 0.8333333333333334,
+    "answer_correctness": 0.5,
+    "correctness_reason": "The answer misses the consequence that a sent-off team official is automatically suspended for the next UEFA club competition match."
+  },
+  "q25": {
+    "id": "q25",
+    "type": "multi_hop",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 1.0,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer accurately includes the deadline, cost, and reimbursement conditions matching the answer key."
+  },
+  "q26": {
+    "id": "q26",
+    "type": "multi_hop",
+    "retrieval_hit": 1.0,
+    "context_recall": 1.0,
+    "faithfulness": 0.5,
+    "answer_correctness": 1.0,
+    "correctness_reason": "The answer correctly states the 72-hour ITC delivery timeframe and confirms the player can play in the Champions League from the league phase onwards."
+  },
+  "q27": {
+    "id": "q27",
+    "type": "no_answer",
+    "correct_refusal": 1.0
+  },
+  "q28": {
+    "id": "q28",
+    "type": "no_answer",
+    "correct_refusal": 1.0
+  },
+  "q29": {
+    "id": "q29",
+    "type": "no_answer",
+    "correct_refusal": 1.0
+  },
+  "q30": {
+    "id": "q30",
+    "type": "no_answer",
+    "correct_refusal": 1.0
+  }
+}

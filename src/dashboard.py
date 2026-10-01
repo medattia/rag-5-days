@@ -20,6 +20,9 @@ DAYS = [
     ("day5_agentic", "Day 5", "Agentic RAG"),
 ]
 
+if (RESULTS / "day5_agentic_v2_scores.json").exists():   # show the second Day 5 run when it exists
+    DAYS[-1] = ("day5_agentic_v2",) + DAYS[-1][1:]
+
 # Metric name, what it checks (plain words), which job it grades
 METRICS = [
     ("answer_correctness", "Answer correctness", "Is the answer right?", "Writing"),
@@ -292,8 +295,12 @@ function render(){
       <span class="chips">${chips}</span></summary>
       <div class="detail"><div><h4>Answer key</h4><p>${esc(r.key)}</p></div>
       <div><h4>Assistant's answer</h4><p>${esc(r.answer) || "No answer saved."}</p></div>
-      ${r.trace && r.trace.length ? `<div><h4>Checker (Corrective RAG)</h4>${r.trace.map(t =>
-        `<p>Round ${t.round}: ${t.note ? esc(t.note) : t.complete ? "chunks judged complete" :
+      ${r.trace && r.trace.length ? `<div><h4>Retrieval steps</h4>${r.trace.map(t =>
+        `<p>Step ${t.round}${t.model ? ` (${esc(t.model)})` : ""}: ${
+          t.note ? esc(t.note) :
+          t.action === "search" ? `searched <em>"${esc(t.query)}"</em>` :
+          t.action === "finish" ? `finished, picked ${t.selected.length} passage(s)` :
+          t.complete ? "chunks judged complete" :
           `missing <em>${esc(t.missing)}</em> → searched <em>"${esc(t.follow_up_query)}"</em>`}</p>`).join("")}</div>` : ""}
       ${r.reason ? `<div><h4>Grader's reason</h4><p>${esc(r.reason)}</p></div>` : ""}</div></details>`;
   }).join("") : "<p>No questions match this filter.</p>";
